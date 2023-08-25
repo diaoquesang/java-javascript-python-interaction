@@ -10,3 +10,4 @@ Collaborators: Yifei Sun, Zhihao Wu, Linfeng Luo, Yuyun Xiang, Ruihan Yang❤️
 😎3.	Java通过http请求获取到python处理完成的信息，来修改excel处理完成度等相关信息
 
 😎4.	Js未获取到处理完成的图片则显示加载中，获取到图片则显示图片
+
