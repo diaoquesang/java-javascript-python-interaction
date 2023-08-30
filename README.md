@@ -14,3 +14,6 @@ Collaborators: Yifei Sun, Zhihao Wu, Linfeng Luo, Yuyun Xiang, Ruihan Yang❤️
 
 # 更正日志
 2023.8.27 罗淋峰代码初始化
+
+#更新
+2023.8.30 service项目前端初始化完成，由于上传限制，只能上传部分V3代码，今后将会采取直接上传文件方式
