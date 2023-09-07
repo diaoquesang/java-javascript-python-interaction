@@ -9,9 +9,11 @@ import com.example.demo.pojo.dto.UserLoginDTO;
 import com.example.demo.pojo.entity.User;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired

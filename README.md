@@ -24,3 +24,5 @@ Collaborators: Yifei Sun, Zhihao Wu, Linfeng Luo, Yuyun Xiang, Ruihan Yang❤️
 2023.8.31 service项目前端重构，删除冗余代码，重新上传src文件夹，其余文件暂不上传，完成axios初步搭建
 
 2023.9.1  后端新增用户登录功能
+
+2023.9.7  后端新增图片处理功能，后端完毕

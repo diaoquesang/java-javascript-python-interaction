@@ -1,5 +1,6 @@
 package com.example.demo.interceptor;
 
+import com.example.demo.context.BaseContext;
 import com.example.demo.properties.JwtProperties;
 import com.example.demo.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
         try {
             Map<String, Object> claims = JwtUtil.parseJWT(jwtProperties.getUserSecretKey(), jwt);
             Long userId = Long.valueOf(claims.get("userId").toString());
+            BaseContext.setCurrentId(userId);
             return true;
         }catch (Exception e){
             response.setStatus(401);
