@@ -26,3 +26,5 @@ Collaborators: Yifei Sun, Zhihao Wu, Linfeng Luo, Yuyun Xiang, Ruihan Yang❤️
 2023.9.1  后端新增用户登录功能
 
 2023.9.7  后端新增图片处理功能，后端完毕
+
+2023.9.8  前端实现图片拖拽上传
