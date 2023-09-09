@@ -11,10 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Controller
 @Slf4j
@@ -29,7 +26,8 @@ public class CommonController {
     public Result<String> upload(MultipartFile file){
 
         try {
-            commonService.imageProcessing(file);
+            String loadPath = commonService.imageProcessing(file);
+            return Result.success(loadPath);
         } catch (IOException e) {
             log.info("文件上传失败：{}", file);
         }

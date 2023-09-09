@@ -29,7 +29,7 @@ public class CommonServiceImpl implements CommonService {
     private GetPathUtil getPathUtil;
 
     @Override
-    public void imageProcessing(MultipartFile file) throws IOException {
+    public String imageProcessing(MultipartFile file) throws IOException {
         //存储图片
         Long userId = BaseContext.getCurrentId();
         LocalDateTime now = LocalDateTime.now();
@@ -86,6 +86,8 @@ public class CommonServiceImpl implements CommonService {
             XSSFRow row = sheet.getRow(serialNumber);
             XSSFCell cell = row.getCell(4);
             cell.setCellValue("是");
+
+            return getPathUtil.getLoadPath();
         }else {
             throw new ProcessingFailedException("处理失败");
         }
