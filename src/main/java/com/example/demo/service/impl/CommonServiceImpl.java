@@ -4,6 +4,7 @@ import com.example.demo.context.BaseContext;
 import com.example.demo.exception.ProcessingFailedException;
 import com.example.demo.service.CommonService;
 import com.example.demo.utils.GetPathUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -13,10 +14,13 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -29,7 +33,7 @@ public class CommonServiceImpl implements CommonService {
     private GetPathUtil getPathUtil;
 
     @Override
-    public String imageProcessing(MultipartFile file) throws IOException {
+    public void imageProcessing(MultipartFile file, HttpServletResponse resp) throws IOException {
         //存储图片
         Long userId = BaseContext.getCurrentId();
         LocalDateTime now = LocalDateTime.now();
@@ -87,7 +91,9 @@ public class CommonServiceImpl implements CommonService {
             XSSFCell cell = row.getCell(4);
             cell.setCellValue("是");
 
-            return getPathUtil.getLoadPath();
+            InputStream in = new FileInputStream(new File(getPathUtil.getLoadPath(), fileName));
+            resp.setContentType(MediaType.IMAGE_PNG_VALUE);
+            IOUtils.copy(in, resp.getOutputStream());
         }else {
             throw new ProcessingFailedException("处理失败");
         }
