@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service</title>
+</head>
+<style>
+    .show {
+        margin-top: 80px;
+        color: skyblue;
+        width: 120px;
+        height: 40px;
+    }
+</style>
+
+<body>
+    <div>
+        <input id="upload_file1" type="file" name="files">
+        <input type="button" value="提交" onclick="upload()">
+    </div>
+    <div>
+        <img src="url1" alt="">
+        <button class="show">展示新图片</button>
+    </div>
+
+    <script>
+        function upload() {
+            alert('提交成功')
+            var formData = new FormData();
+            formData.append("file1", document.getElementById('upload_file1').files[0]);
+            $.ajax({
+                url: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
+                type: 'POST',
+                data: formData, // 上传formdata封装的数据包
+                dataType: 'JSON',
+                cache: false, // 不缓存
+                processData: false, // jQuery不要去处理发送的数据
+                contentType: false, // jQuery不要去设置Content-Type请求头
+                success: function (data) {
+                    alert("success");
+                }
+            });
+        }
+        const btns = document.querySelector('button');
+        btns[0].onclick = function () {
+            axios({
+                method: 'GET',
+                url: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
+                timeout: 1000,
+            }).then((result) => {
+                console.log(result)
+                var url1 = result.img
+            })
+        }
+    </script>
+</body>
+
+</html>
