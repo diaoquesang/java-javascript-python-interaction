@@ -1,17 +1,18 @@
 package com.example.demo.controller;
 
+import com.example.demo.result.Result;
 import com.example.demo.service.CommonService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Controller
+@RestController
 @Slf4j
 public class CommonController {
 
@@ -21,12 +22,14 @@ public class CommonController {
 
     @ApiOperation("图片上传")
     @PostMapping("/upload")
-    public void upload(MultipartFile file, HttpServletResponse response){
+    public Result<String> upload(@RequestParam("file") MultipartFile file){
 
         try {
-            commonService.imageProcessing(file, response);
+            commonService.imageProcessing(file);
+            return Result.success();
         } catch (IOException e) {
-            log.info("文件上传失败：{}", file);
+            log.info("文件上传失败");
+            return Result.error("文件上传失败");
         }
     }
 }

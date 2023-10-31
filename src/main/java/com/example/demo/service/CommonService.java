@@ -6,5 +6,5 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface CommonService {
-    void imageProcessing(MultipartFile file, HttpServletResponse response) throws IOException;
+    void imageProcessing(MultipartFile file) throws IOException;
 }

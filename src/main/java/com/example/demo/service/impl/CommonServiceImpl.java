@@ -1,28 +1,18 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.context.BaseContext;
 import com.example.demo.exception.ProcessingFailedException;
 import com.example.demo.service.CommonService;
 import com.example.demo.utils.GetPathUtil;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,9 +23,11 @@ public class CommonServiceImpl implements CommonService {
     private GetPathUtil getPathUtil;
 
     @Override
-    public void imageProcessing(MultipartFile file, HttpServletResponse resp) throws IOException {
+    public void imageProcessing(MultipartFile file) throws IOException {
         //存储图片
-        Long userId = BaseContext.getCurrentId();
+        //TODO 此为获取用户id
+        //Long userId = BaseContext.getCurrentId();
+        Long userId = 1L;
         LocalDateTime now = LocalDateTime.now();
         String originalFilename = file.getOriginalFilename();
 
@@ -43,12 +35,15 @@ public class CommonServiceImpl implements CommonService {
         String fileName = userId.toString() + "_"
                 + now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss"))
                 + originalFilename.substring(originalFilename.lastIndexOf('.'));
-
-        String savePath = getPathUtil.getSavePath();
+        //TODO 保存路径应改为动态而不是动态
+        //String savePath = getPathUtil.getSavePath();
+        String savePath = "D:\\Develop\\IdeaProjects\\demo\\src\\main\\resources\\static\\original";
         file.transferTo(new File(savePath, fileName));
 
         //将状态写入excel
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("templates/文件状态.xlsx");
+        //TODO 保存路径应改为动态
+        OutputStream outputStream = Files.newOutputStream(new File("D:\\Develop\\IdeaProjects\\demo\\src\\main\\resources\\templates\\文件状态.xlsx").toPath());
 
         XSSFWorkbook excel = new XSSFWorkbook(inputStream);
         XSSFSheet sheet = excel.getSheet("Sheet1");
@@ -58,7 +53,7 @@ public class CommonServiceImpl implements CommonService {
             XSSFRow row = sheet.getRow(serialNumber);
             XSSFCell cell = row.getCell(0);
 
-            if (cell.getStringCellValue() != null){
+            if (cell.getStringCellValue() == null || cell.getStringCellValue().isEmpty()){
                 cell.setCellValue(serialNumber);
 
                 cell = row.getCell(1);
@@ -72,18 +67,22 @@ public class CommonServiceImpl implements CommonService {
 
                 cell = row.getCell(4);
                 cell.setCellValue("否");
+
+                excel.write(outputStream);
                 break;
             }
             serialNumber += 1;
         }
 
 
-        //发送HTTP请求
-        CloseableHttpClient httpClient = HttpClients.createDefault();
+        //TODO 发送HTTP请求
+        /*CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet("http://localhost:8081/process");
         CloseableHttpResponse response = httpClient.execute(httpGet);
 
-        int statusCode = response.getStatusLine().getStatusCode();
+        int statusCode = response.getStatusLine().getStatusCode();*/
+
+        int statusCode = 200;
 
         //处理完成，写入excel
         if (statusCode == 200){
@@ -91,11 +90,14 @@ public class CommonServiceImpl implements CommonService {
             XSSFCell cell = row.getCell(4);
             cell.setCellValue("是");
 
-            InputStream in = new FileInputStream(new File(getPathUtil.getLoadPath(), fileName));
-            resp.setContentType(MediaType.IMAGE_PNG_VALUE);
-            IOUtils.copy(in, resp.getOutputStream());
+            //InputStream in = new FileInputStream(new File(getPathUtil.getLoadPath(), fileName));
+            /*resp.setContentType(MediaType.IMAGE_PNG_VALUE);
+            IOUtils.copy(in, resp.getOutputStream());*/
         }else {
             throw new ProcessingFailedException("处理失败");
         }
+        inputStream.close();
+        outputStream.close();
+        excel.close();
     }
 }
